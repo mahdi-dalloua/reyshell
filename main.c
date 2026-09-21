@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 int main(void)
 {
@@ -11,7 +12,12 @@ int main(void)
         if (fgets(command, sizeof(command), stdin) == NULL)
             break;
 
-        printf("You entered: %s", command);
+        command[strcspn(command, "\n")] = '\0';
+
+        if (strcmp(command, "exit") == 0)
+            break;
+
+        printf("You entered: %s\n", command);
     }
 
     return 0;
