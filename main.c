@@ -10,26 +10,29 @@ int main(void)
 
     while (1)
     {
+        char *args[64];
+        int argc = 0;
+
         printf("reyshell> ");
 
         if (fgets(command, sizeof(command), stdin) == NULL)
             break;
 
-        command[strcspn(command, "\n")] = '\0';
+        char *token = strtok(command, " \t\n");
 
-        char *command_line = command;
+        while (token != NULL && argc < 63)
+        {
+            args[argc] = token;
+            argc++;
+            token = strtok(NULL, " \t\n");
+        }
 
-        while (*command_line == ' ' || *command_line == '\t')
-            command_line++;
+        args[argc] = NULL;
 
-        char *end = command_line + strlen(command_line);
+        if (argc == 0)
+            continue;
 
-        while (end > command_line && (end[-1] == ' ' || end[-1] == '\t'))
-            end--;
-
-        *end = '\0';
-
-        if (strcmp(command_line, "exit") == 0)
+        if (strcmp(args[0], "exit") == 0)
             break;
 
         pid_t pid = fork();
@@ -42,7 +45,7 @@ int main(void)
 
         if (pid == 0)
         {
-            execlp(command_line, command_line, (char *)NULL);
+            execvp(args[0], args);
             perror("reyshell");
             return 1;
         }
