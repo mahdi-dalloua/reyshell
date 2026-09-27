@@ -34,6 +34,15 @@ int main(void)
 
         if (strcmp(args[0], "exit") == 0)
             break;
+        if (strcmp(args[0], "cd") == 0)
+        {
+            if (args[1] == NULL)
+                fprintf(stderr, "reyshell: cd: missing argument\n");
+            else if (chdir(args[1]) == -1)
+                perror("reyshell: cd");
+
+            continue;
+        }
 
         pid_t pid = fork();
 
