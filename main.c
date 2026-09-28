@@ -44,6 +44,18 @@ int main(void)
             continue;
         }
 
+        if (strcmp(args[0], "pwd") == 0)
+        {
+            char cwd[1024];
+
+        if (getcwd(cwd, sizeof(cwd)) == NULL)
+            perror("reyshell: pwd");
+        else
+            printf("%s\n", cwd);
+
+        continue;
+}
+
         pid_t pid = fork();
 
         if (pid == -1)
