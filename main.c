@@ -54,8 +54,20 @@ int main(void)
             printf("%s\n", cwd);
 
         continue;
-}
+        }
+        if (strcmp(args[0], "echo") == 0)
+        {
+            for (int i = 1; args[i] != NULL; i++)
+            {
+                printf("%s", args[i]);
 
+                if (args[i + 1] != NULL)
+                    printf(" ");
+            }
+
+            printf("\n");
+            continue;
+        }
         pid_t pid = fork();
 
         if (pid == -1)
