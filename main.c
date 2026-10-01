@@ -55,6 +55,20 @@ int main(void)
 
         continue;
         }
+
+        if (strcmp(args[0], "echo") == 0)
+        {
+        for (int i = 1; args[i] != NULL; i++)
+        {
+            printf("%s", args[i]);
+
+            if (args[i + 1] != NULL)
+                printf(" ");
+        }
+
+        printf("\n");
+        continue;
+        }
         if (strcmp(args[0], "echo") == 0)
         {
             for (int i = 1; args[i] != NULL; i++)
