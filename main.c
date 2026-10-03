@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -36,29 +37,19 @@ int main(void)
             break;
         if (strcmp(args[0], "cd") == 0)
         {
-            if (args[1] == NULL)
-                fprintf(stderr, "reyshell: cd: missing argument\n");
-            else if (chdir(args[1]) == -1)
-                perror("reyshell: cd");
+            char *path = args[1];
 
-            continue;
-        }
+        if (path == NULL)
+            path = getenv("HOME");
 
-    
+        if (path == NULL)
+            fprintf(stderr, "reyshell: cd: HOME not set\n");
+        else if (chdir(path) == -1)
+            perror("reyshell: cd");
 
-        if (strcmp(args[0], "echo") == 0)
-        {
-        for (int i = 1; args[i] != NULL; i++)
-        {
-            printf("%s", args[i]);
-
-            if (args[i + 1] != NULL)
-                printf(" ");
-        }
-
-        printf("\n");
         continue;
         }
+
         if (strcmp(args[0], "echo") == 0)
         {
             for (int i = 1; args[i] != NULL; i++)
