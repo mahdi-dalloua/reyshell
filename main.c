@@ -54,7 +54,17 @@ int main(void)
         {
             for (int i = 1; args[i] != NULL; i++)
             {
-                printf("%s", args[i]);
+                if (args[i][0] == '$')
+                {
+                    char *value = getenv(args[i] + 1);
+
+                    if (value != NULL)
+                        printf("%s", value);
+                }
+                else
+                {
+                    printf("%s", args[i]);
+                }
 
                 if (args[i + 1] != NULL)
                     printf(" ");
