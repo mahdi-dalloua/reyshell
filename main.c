@@ -65,12 +65,16 @@ int main(void)
                 {
                     printf("%s", args[i]);
                 }
-
                 if (args[i + 1] != NULL)
                     printf(" ");
-            }
+                }
 
             printf("\n");
+            continue;
+        }
+        if (strcmp(args[0], "clear") == 0)
+        {
+            printf("\033[2J\033[H");
             continue;
         }
         pid_t pid = fork();
