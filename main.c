@@ -8,6 +8,8 @@
 int main(void)
 {
     char command[1024];
+    char history[100][1024];
+    int history_count = 0;
 
     while (1)
     {
@@ -17,7 +19,14 @@ int main(void)
         printf("reyshell> ");
 
         if (fgets(command, sizeof(command), stdin) == NULL)
-            break;
+    break;
+
+        if (history_count < 100)
+        {
+            strcpy(history[history_count], command);
+            history_count++;
+        }
+
 
         char *token = strtok(command, " \t\n");
 
@@ -77,6 +86,46 @@ int main(void)
             printf("\033[2J\033[H");
             continue;
         }
+        if (strcmp(args[0], "history") == 0)
+        {
+            for (int i = 0; i < history_count; i++)
+                printf("%d  %s", i + 1, history[i]);
+
+            continue;
+        }
+
+        if (strcmp(args[0], "export") == 0)
+        {
+            if (args[1] == NULL)
+            {
+                fprintf(stderr, "reyshell: export: missing argument\n");
+                continue;
+            }
+
+            char *equals = strchr(args[1], '=');
+
+            if (equals != NULL)
+            {
+                *equals = '\0';
+
+                if (setenv(args[1], equals + 1, 1) == -1)
+                    perror("reyshell: export");
+
+                continue;
+            }
+
+            if (args[2] != NULL && strcmp(args[2], "=") == 0 && args[3] != NULL)
+            {
+                if (setenv(args[1], args[3], 1) == -1)
+                    perror("reyshell: export");
+
+                continue;
+            }
+
+            fprintf(stderr, "reyshell: export: invalid format\n");
+            continue;
+        }
+
         pid_t pid = fork();
 
         if (pid == -1)
